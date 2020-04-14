@@ -1,24 +1,30 @@
 import React from 'react';
 import {BrowserRouter as Router, Switch, Route,Link} from 'react-router-dom';
 import fire from '../config/Fire';
+import Alert from 'react-bootstrap/Alert';
 class Login extends React.Component {
    emailRef = React.createRef();
    passwordRef = React.createRef();
+  
     state = {
-        email: '',
-        password:''
+      show:false,
+      error: ''
     }
    year = new Date();
 
    login=(e)=>{
          e.preventDefault();
+         
         console.log(this.emailRef.current.value);
         // this.setState({email:this.emailRef.current.value});
         // this.setState({password:this.passwordRef.current.value});
          fire.auth().signInWithEmailAndPassword(this.emailRef.current.value,this.passwordRef.current.value).then((u)=>{
-         }).catch((error)=>{
-             console.log(error);
+           
+         }).catch((err)=>{
+          this.setState({show:true,error:err.message});
+             console.log(err);
          });
+         console.log(this.state.error);
      }
   //    emailChange=(e)=>{
          
@@ -55,6 +61,9 @@ class Login extends React.Component {
                     <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                   </div>
                   <form class="user" >
+                  <Alert show={this.state.show} variant="danger">
+                    <p>{this.state.error}</p>
+                </Alert>
                     <div class="form-group">
                       <input type="email" ref={this.emailRef} class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address..."/>
                     </div>
@@ -70,6 +79,7 @@ class Login extends React.Component {
                     <a class="btn btn-primary btn-user btn-block" href="/" onClick={this.login}>
                       <Link to="/"><span style={{color:"white",textDecoration:"none"}}>Login</span></Link>
                     </a>
+                    
                     {/* <hr/> */}
                     {/* <a href="index.html" class="btn btn-google btn-user btn-block">
                       <i class="fab fa-google fa-fw"></i> Login with Google
