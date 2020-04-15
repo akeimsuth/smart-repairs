@@ -1,314 +1,352 @@
-import React from 'react';
-import {BrowserRouter as Router, Switch, Route,Link,Redirect} from 'react-router-dom';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    Redirect,
+    matchPath,
+    NavLink,
+    useLocation,
+} from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Table from './Table';
 import Profile from './Profile';
 import Settings from './Settings';
 import UserManagement from './UserManagement';
-import { useState } from 'react';
 import fire from '../config/Fire';
-
+import './Header.css';
 
 function Header() {
-  
-  let year = new Date();
-  let [style,setStyle] = useState("nav-item");
-  let [cstyle, csetStyle] = useState("nav-item");
-  let [astyle, asetStyle] = useState("nav-item");
-  let [rstyle, rsetStyle] = useState("nav-item");
-  let [ustyle, usetStyle] = useState("nav-item");
-  let [istyle, isetStyle] = useState("nav-item");
-  let [title, setTitle] = useState("Customer");
-  const set = () =>{
-    //const sty = state.style;
-    setStyle("nav-item active");
-    csetStyle("nav-item");
-    asetStyle("nav-item");
-    rsetStyle("nav-item");
-    usetStyle("nav-item");
-    isetStyle("nav-item");
-    console.log(style);
-  }
-  const logout =() =>{
-    fire.auth().signOut();
-  }
-  const menu = () =>{
-    //const sty = state.style;
-    setStyle("nav-item");
-    csetStyle("nav-item");
-    asetStyle("nav-item");
-    rsetStyle("nav-item");
-    usetStyle("nav-item");
-    isetStyle("nav-item");
-    console.log(style);
-  }
-  const cset = () =>{
-    //const sty = state.style;
-    csetStyle("nav-item active");
-    setStyle("nav-item");
-    asetStyle("nav-item");
-    rsetStyle("nav-item");
-    usetStyle("nav-item");
-    isetStyle("nav-item");
-    console.log(style);
-  }
-  const assess = () =>{
-    asetStyle("nav-item active");
-    setTitle("Assessments");
-    setStyle("nav-item");
-    csetStyle("nav-item");
-    rsetStyle("nav-item");
-    usetStyle("nav-item");
-    isetStyle("nav-item");
-  }
-  const custom = () =>{
-    cset();
-    setTitle("Customers");
-  }
-  const repair = () =>{
-    rsetStyle("nav-item active");
-    setTitle("Repairs");
-    setStyle("nav-item");
-    csetStyle("nav-item");
-    asetStyle("nav-item");
-    usetStyle("nav-item");
-    isetStyle("nav-item");
-  }
-  const unlock = () =>{
-    usetStyle("nav-item active");
-    setTitle("Unlock");
-    setStyle("nav-item");
-    csetStyle("nav-item");
-    asetStyle("nav-item");
-    rsetStyle("nav-item");
-    isetStyle("nav-item");
-  }
-  const invent = () =>{
-    isetStyle("nav-item active");
-    setTitle("Inventory");
-    setStyle("nav-item");
-    csetStyle("nav-item");
-    asetStyle("nav-item");
-    rsetStyle("nav-item");
-    usetStyle("nav-item");
-  }
+    let year = new Date();
+    const page = useRef('');
+    let [title, setTitle] = useState(page.current);
 
-  return (
-    <Router>
-    
-  <div id="wrapper">
+    const logout = () => {
+        fire.auth().signOut();
+    };
 
-    
-    <ul style={{background: "#3b688a"}} class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+    const menu = () => {
+        page.current = '';
+    };
 
-      
-      <a style={{background: "#3b688a"}}class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+    const dash = () => {
+        page.current = 'Dashboard';
+    };
 
-        <Link to='/dashboard'><img src="../logosm.png" alt="" width="200" heighth="200" onClick={set}/></Link>
-      </a>
+    const assess = () => {
+        page.current = 'Assessment';
+    };
 
-     
-      <hr class="sidebar-divider my-0"/>
+    const custom = () => {
+        page.current = 'Customer';
+    };
+    const repair = () => {
+        page.current = 'Repair';
+    };
+    const unlock = () => {
+        console.log('Unlock');
+        page.current = 'Unlock';
+    };
 
-      
-      <li className={style}>
-        <a class="nav-link links" href="">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <Link to='/dashboard'><span style={{color:"white",textDecoration:"none"}} onClick={set}>Dashboard</span></Link></a>
-      </li>
+    const invent = () => {
+        console.log('Inventory');
+        page.current = 'Inventory';
+    };
 
-     
-      <hr class="sidebar-divider"/>
+    /**
+     * List item component
+     */
+    const MenuLink = ({ to, className, onClick, icon, title }) => {
+        return (
+            <li className={`nav-item`}>
+                <NavLink className="nav-link links" activeClassName="active-link" to={to}>
+                    <i className={icon}></i>
+                    <span className="styled-span">{title}</span>
+                </NavLink>
+            </li>
+        );
+    };
 
-     
-      <div class="sidebar-heading">
-        Options
-      </div>
+    return (
+        <Router>
+            <div id="wrapper">
+                <ul
+                    style={{ background: '#3b688a' }}
+                    className="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion"
+                    id="accordionSidebar"
+                >
+                    <Link
+                        to="/dashboard"
+                        style={{ backgroundColor: '3b688a' }}
+                        className="sidebar-brand d-flex align-items-center justify-content-center"
+                    >
+                        <img
+                            src="../logosm.png"
+                            alt=""
+                            width="200"
+                            heighth="200"
+                            onClick={dash}
+                        />
+                    </Link>
+                    <hr className="sidebar-divider my-0" />
+                    <MenuLink
+                        to={'/dashboard'}
+                        onClick={dash}
+                        icon="fas fa-fw fa-tachometer-alt"
+                        title="Dashboard"
+                    />
+                    <hr className="sidebar-divider" />
+                    <div className="sidebar-heading">Options</div>
+                    <MenuLink
+                        to={'/assessment'}
+                        icon="fas fa-server"
+                        title="Assessments"
+                    />
+                    <MenuLink
+                        to={'/Repair'}
+                        onClick={dash}
+                        icon="fas fa-fw fa-wrench"
+                        title="Repair"
+                    />
+                    <MenuLink to={'/unlock'} icon="fas fa-unlock" title="Unlocks" />
+                    <MenuLink to={'/inventory'} icon="fas fa-barcode" title="Inventory" />
+                    <MenuLink
+                        to={'/customer'}
+                        icon="fas fa-fw fa-user"
+                        title="Customer"
+                    />
+                    <hr className="sidebar-divider" />
+                </ul>
 
-      <li className={astyle}>
-        <a class="nav-link" href="">
-          <i class="fas fa-server"></i>
-          <Link to='/assessment'><span style={{color:"white",textDecoration:"none"}} onClick={assess}>Assessments</span></Link>
-        </a>
-      </li>
+                <div id="content-wrapper" className="d-flex flex-column">
+                    <div id="content">
+                        <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                            <button
+                                id="sidebarToggleTop"
+                                className="btn btn-link d-md-none rounded-circle mr-3"
+                            >
+                                <i className="fa fa-bars"></i>
+                            </button>
 
-      <li className={rstyle}>
-        <a class="nav-link" href="">
-          <i class="fas fa-fw fa-wrench"></i>
-          <Link to='/repair'><span style={{color:"white",textDecoration:"none"}} onClick={repair}>Repairs</span></Link>
-        </a>
-      </li>
+                            <form className="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                <div className="input-group">
+                                    <input
+                                        type="text"
+                                        className="form-control bg-light border-0 small"
+                                        placeholder="Search for..."
+                                        aria-label="Search"
+                                        aria-describedby="basic-addon2"
+                                    />
+                                    <div className="input-group-append">
+                                        <button className="btn btn-primary" type="button">
+                                            <i className="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
 
-      <li className={ustyle}>
-        <a class="nav-link" href="">
-          <i class="fas fa-unlock"></i>
-          <Link to='/unlock'><span style={{color:"white",textDecoration:"none"}} onClick={unlock}>Unlocks</span></Link>
-        </a>
-      </li>
-     
-      <li className={istyle}>
-        <a class="nav-link" href="">
-          <i class="fas fa-barcode"></i>
-          <Link to='/inventory'><span style={{color:"white",textDecoration:"none"}} onClick={invent}>Inventory</span></Link>
-        </a>
-      </li>
+                            <ul className="navbar-nav ml-auto">
+                                <li className="nav-item dropdown no-arrow d-sm-none">
+                                    <a
+                                        className="nav-link dropdown-toggle"
+                                        href="#"
+                                        id="searchDropdown"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        <i className="fas fa-search fa-fw"></i>
+                                    </a>
 
-      <li className={cstyle}>
-      <a class="nav-link" href="">
-          <i class="fas fa-fw fa-user"></i>
-          <Link to='/customer'><span style={{color:"white",textDecoration:"none"}} onClick={custom}>Customers</span></Link>
-            
-           
-        </a>
-      </li>
+                                    <div
+                                        className="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
+                                        aria-labelledby="searchDropdown"
+                                    >
+                                        <form className="form-inline mr-auto w-100 navbar-search">
+                                            <div className="input-group">
+                                                <input
+                                                    type="text"
+                                                    className="form-control bg-light border-0 small"
+                                                    placeholder="Search for..."
+                                                    aria-label="Search"
+                                                    aria-describedby="basic-addon2"
+                                                />
+                                                <div className="input-group-append">
+                                                    <button
+                                                        style={{ background: '#3b688a' }}
+                                                        className="btn"
+                                                        type="button"
+                                                    >
+                                                        <i className="fas fa-search fa-sm"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </li>
 
-      
-      <hr class="sidebar-divider"/>
+                                <div className="topbar-divider d-none d-sm-block"></div>
 
+                                <li className="nav-item dropdown no-arrow">
+                                    <a
+                                        className="nav-link dropdown-toggle"
+                                        href="#"
+                                        id="userDropdown"
+                                        role="button"
+                                        data-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        <span className="mr-2 d-none d-lg-inline text-gray-600 small">
+                                            Administrator
+                                        </span>
+                                        <i className="far fa-user"></i>
+                                    </a>
 
-    </ul>
-    
+                                    <div
+                                        className="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                        aria-labelledby="userDropdown"
+                                    >
+                                        <Link to="/profile" className="dropdown-item">
+                                            <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            <span onClick={menu}>Profile</span>
+                                        </Link>
+                                        <Link className="dropdown-item" to="/settings">
+                                            <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            <span onClick={menu}>Settings</span>
+                                        </Link>
+                                        <a className="dropdown-item" href="#">
+                                            <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Activity Log
+                                        </a>
+                                        <div className="dropdown-divider"></div>
+                                        <a
+                                            className="dropdown-item"
+                                            href="#"
+                                            data-toggle="modal"
+                                            data-target="#logoutModal"
+                                        >
+                                            <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                            Logout
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </nav>
 
-   
-    <div id="content-wrapper" class="d-flex flex-column">
-
-     
-      <div id="content">
-
-      
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-          
-          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-            <i class="fa fa-bars"></i>
-          </button>
-
-          <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"/>
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
-              </div>
-            </div>
-          </form>
-
-        
-          <ul class="navbar-nav ml-auto">
-
-            
-            <li class="nav-item dropdown no-arrow d-sm-none">
-              <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-search fa-fw"></i>
-              </a>
-            
-              <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-                <form class="form-inline mr-auto w-100 navbar-search">
-                  <div class="input-group">
-                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2"/>
-                    <div class="input-group-append">
-                      <button style={{background:"#3b688a"}}class="btn" type="button">
-                        <i class="fas fa-search fa-sm"></i>
-                      </button>
+                        <Switch>
+                            <Route
+                                path="/customer"
+                                render={() => {
+                                    return <Table name={'Customer'} />;
+                                }}
+                            />
+                            <Route
+                                path="/assessment"
+                                render={() => {
+                                    return <Table name={'Assessment'} />;
+                                }}
+                            />
+                            <Route
+                                path="/repair"
+                                render={() => {
+                                    return <Table name={'Repairs'} />;
+                                }}
+                            />
+                            <Route
+                                path="/umanage"
+                                render={() => {
+                                    return <Table />;
+                                }}
+                            />
+                            <Route
+                                path="/unlock"
+                                render={() => {
+                                    return <Table name={'Unlock'} />;
+                                }}
+                            />
+                            <Route
+                                path="/inventory"
+                                render={() => {
+                                    return <Table name={'Inventory'} />;
+                                }}
+                            />
+                            <Route
+                                path="/dashboard"
+                                render={() => {
+                                    dash();
+                                    return <Dashboard />;
+                                }}
+                            />
+                            <Route path="/profile" render={() => <Profile />} />
+                            <Route path="/settings" render={() => <Settings />} />
+                            <Route path="/user" render={() => <UserManagement />} />
+                            <Route render={() => <Redirect to="/dashboard" />} />
+                        </Switch>
                     </div>
-                  </div>
-                </form>
-              </div>
-            </li>
 
-            <div class="topbar-divider d-none d-sm-block"></div>
+                    <footer className="sticky-footer bg-white">
+                        <div className="container my-auto">
+                            <div className="copyright text-center my-auto">
+                                <span>
+                                    Copyright &copy; SMS Repairs {year.getFullYear()}
+                                </span>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+            </div>
 
-           
-            <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Administrator</span>
-               <i class="far fa-user"></i>
-              </a>
-             
-              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
-                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                  <Link to='/profile'><span onClick={menu}>Profile</span></Link>
-                </a>
-                <a class="dropdown-item" href="#">
-                  <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                  <Link to='/settings'><span onClick={menu}>Settings</span></Link>
-                </a>
-                <a class="dropdown-item" href="#">
-                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Activity Log
-                </a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Logout
-                </a>
-              </div>
-            </li>
+            <a className="scroll-to-top rounded" href="#wrapper">
+                <i className="fas fa-angle-up"></i>
+            </a>
 
-          </ul>
-
-        </nav>
-     
-          
-          <Switch>
-          
-          <Route path="/customer" render={() => <Table name={title} />}/>
-          <Route path="/assessment" render={() => <Table name={title} />}/>
-          <Route path="/repair" render={() => <Table name={title} />}/>
-          <Route path="/umanage" render={() => <Table/>}/>
-          <Route path="/unlock" render={() => <Table name={title} />}/>
-          <Route path="/inventory" render={() => <Table name={title} />}/>
-          <Route path="/dashboard" render={() => <Dashboard />}/>
-          <Route path="/profile" render={() => <Profile  />}/>
-          <Route path="/settings" render={() => <Settings  />}/>
-          <Route path="/user" render={() => <UserManagement />}/>
-          
-          </Switch>
-        
-      </div>
-      
-
-      <footer class="sticky-footer bg-white">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
-            <span>Copyright &copy; SMS Repairs {year.getFullYear()}</span>
-          </div>
-        </div>
-      </footer>
-     
-
-    </div>
- 
-
-  </div>
-  
-    <a class="scroll-to-top rounded" href="#wrapper">
-      <i class="fas fa-angle-up"></i>
-    </a>
-
-    
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-          </div>
-          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="/login" onClick={logout}>Logout</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </Router>
-
-  );
+            <div
+                className="modal fade"
+                id="logoutModal"
+                tabIndex="-1"
+                role="dialog"
+                aria-labelledby="exampleModalLabel"
+                aria-hidden="true"
+            >
+                <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">
+                                Ready to Leave?
+                            </h5>
+                            <button
+                                className="close"
+                                type="button"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                            >
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            Select "Logout" below if you are ready to end your current
+                            session.
+                        </div>
+                        <div className="modal-footer">
+                            <button
+                                className="btn btn-secondary"
+                                type="button"
+                                data-dismiss="modal"
+                            >
+                                Cancel
+                            </button>
+                            <a className="btn btn-primary" href="/login" onClick={logout}>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Router>
+    );
 }
 
 export default Header;

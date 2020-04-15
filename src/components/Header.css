@@ -1,0 +1,13 @@
+a.nav-link.active-link i {
+    color: #fff !important;
+}
+
+a.active-link span {
+    color: #fff;
+    font-weight: 700;
+}
+
+.styled-span {
+    color: 'white';
+    text-decoration: 'none';
+}

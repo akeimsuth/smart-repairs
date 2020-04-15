@@ -11,10 +11,12 @@
     "@testing-library/user-event": "^7.2.1",
     "firebase": "^7.14.0",
     "material-table": "^1.57.2",
+    "moment": "^2.24.0",
     "mui-datatables": "^2.14.0",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-moment": "^0.9.7",
     "react-native-paper": "^3.8.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1"
