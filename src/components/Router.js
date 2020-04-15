@@ -23,15 +23,21 @@ class Router extends React.Component {
         });
     }
     render() {
+        console.log(this.state.user);
         return (
             <BrowserRouter>
-                {this.state.user != null ? (
-                    /*<Redirect to="/" />*/ ''
-                ) : (
-                    <Redirect to="/login" />
-                )}
+                {this.state.user === null && <Redirect to="/login" />}
                 <Switch>
-                    <Route path="/login" component={Login} />
+                    <Route
+                        path="/login"
+                        render={(props) => {
+                            return this.state.user === null ? (
+                                <Login {...props} />
+                            ) : (
+                                <Redirect to="/dashboard" />
+                            );
+                        }}
+                    />
 
                     <Route component={Header} />
                     {/* <Route path="/dashboard" component={Dashboard}/> */}

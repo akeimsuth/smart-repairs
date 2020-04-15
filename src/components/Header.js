@@ -18,40 +18,9 @@ import fire from '../config/Fire';
 import './Header.css';
 
 function Header() {
-    let year = new Date();
-    const page = useRef('');
-    let [title, setTitle] = useState(page.current);
-
+    const year = new Date();
     const logout = () => {
         fire.auth().signOut();
-    };
-
-    const menu = () => {
-        page.current = '';
-    };
-
-    const dash = () => {
-        page.current = 'Dashboard';
-    };
-
-    const assess = () => {
-        page.current = 'Assessment';
-    };
-
-    const custom = () => {
-        page.current = 'Customer';
-    };
-    const repair = () => {
-        page.current = 'Repair';
-    };
-    const unlock = () => {
-        console.log('Unlock');
-        page.current = 'Unlock';
-    };
-
-    const invent = () => {
-        console.log('Inventory');
-        page.current = 'Inventory';
     };
 
     /**
@@ -81,18 +50,11 @@ function Header() {
                         style={{ backgroundColor: '3b688a' }}
                         className="sidebar-brand d-flex align-items-center justify-content-center"
                     >
-                        <img
-                            src="../logosm.png"
-                            alt=""
-                            width="200"
-                            heighth="200"
-                            onClick={dash}
-                        />
+                        <img src="../logosm.png" alt="" width="200" heighth="200" />
                     </Link>
                     <hr className="sidebar-divider my-0" />
                     <MenuLink
                         to={'/dashboard'}
-                        onClick={dash}
                         icon="fas fa-fw fa-tachometer-alt"
                         title="Dashboard"
                     />
@@ -103,12 +65,7 @@ function Header() {
                         icon="fas fa-server"
                         title="Assessments"
                     />
-                    <MenuLink
-                        to={'/Repair'}
-                        onClick={dash}
-                        icon="fas fa-fw fa-wrench"
-                        title="Repair"
-                    />
+                    <MenuLink to={'/Repair'} icon="fas fa-fw fa-wrench" title="Repair" />
                     <MenuLink to={'/unlock'} icon="fas fa-unlock" title="Unlocks" />
                     <MenuLink to={'/inventory'} icon="fas fa-barcode" title="Inventory" />
                     <MenuLink
@@ -211,11 +168,11 @@ function Header() {
                                     >
                                         <Link to="/profile" className="dropdown-item">
                                             <i className="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                            <span onClick={menu}>Profile</span>
+                                            <span>Profile</span>
                                         </Link>
                                         <Link className="dropdown-item" to="/settings">
                                             <i className="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                            <span onClick={menu}>Settings</span>
+                                            <span>Settings</span>
                                         </Link>
                                         <a className="dropdown-item" href="#">
                                             <i className="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -276,7 +233,6 @@ function Header() {
                             <Route
                                 path="/dashboard"
                                 render={() => {
-                                    dash();
                                     return <Dashboard />;
                                 }}
                             />
