@@ -2,11 +2,57 @@ import React from 'react';
 import MUIDataTable from 'mui-datatables';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { FormGroup, TextField, FormLabel } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment';
 
 import './Table.css';
 class Table extends React.Component {
     render() {
+        const data = [
+            ['12/3/2020', 'Gabby George', 'Samsung Note 8', 'Ben Franklin', 'Repaired'],
+            ['30/3/2020', 'Aiden Lloyd', 'Iphone 7', 'Mark Holt', 'Repaired'],
+            ['1/4/2020', 'Jaden Collins', 'Iphone 6 Plus', 'Bill Nyle', 'To be Repaired'],
+            ['4/4/2020', 'Franky Rees', 'LG V20', 'Mike Stewart', 'To be Repaired'],
+            ['23/3/2020', 'Aaren Rose', 'Samsung Note 10', 'Toledo Johnson', 'Assessed'],
+            ['3/4/2020', 'Blake Duncan', 'Nokia 3.1', 'Santa Diego', 'To be Assessed'],
+            ['12/3/2020', 'Gabby George', 'Samsung Note 8', 'Ben Franklin', 'Repaired'],
+            ['30/3/2020', 'Aiden Lloyd', 'Iphone 7', 'Mark Holt', 'Repaired'],
+            ['1/4/2020', 'Jaden Collins', 'Iphone 6 Plus', 'Bill Nyle', 'To be Repaired'],
+            ['4/4/2020', 'Franky Rees', 'LG V20', 'Mike Stewart', 'To be Repaired'],
+            ['23/3/2020', 'Aaren Rose', 'Samsung Note 10', 'Toledo Johnson', 'Assessed'],
+            ['3/4/2020', 'Blake Duncan', 'Nokia 3.1', 'Santa Diego', 'To be Assessed'],
+        ];
+
+        const customFilter = (options, label) => ({
+            logic: (value, filters) => {
+                if (filters.length) {
+                    // check if value matches string
+                    let val = filters.some((e) => value.includes(e));
+                    return val !== true;
+                }
+
+                return false;
+            },
+            display: (filterList, onChange, index, column) => {
+                return (
+                    <div>
+                        <Autocomplete
+                            id={`auto-${label}`}
+                            options={options} // TODO: modify based on actual db
+                            renderInput={(params) => (
+                                <TextField {...params} label={label} />
+                            )}
+                            value={filterList[index]}
+                            onChange={(e, value) => {
+                                onChange(value, index, column);
+                            }}
+                            freeSolo
+                            multiple
+                        />
+                    </div>
+                );
+            },
+        });
         const columns = [
             {
                 name: 'Date',
@@ -67,39 +113,36 @@ class Table extends React.Component {
                 name: 'Customer',
                 options: {
                     filter: true,
-                    filterType: 'textField',
+                    filterType: 'custom',
+                    filterOptions: customFilter(
+                        data.map((r) => r[1]) /** TODO: modify for production */,
+                        'Customer'
+                    ),
                 },
             },
             {
                 name: 'Device',
                 options: {
                     filter: true,
-                    filterType: 'textField',
+                    filterType: 'custom',
+                    filterOptions: customFilter(
+                        data.map((r) => r[2]) /** TODO: modify for production */,
+                        'Device'
+                    ),
                 },
             },
             {
                 name: 'Received By',
                 options: {
                     filter: true,
-                    filterType: 'textField',
+                    filterType: 'custom',
+                    filterOptions: customFilter(
+                        data.map((r) => r[3]) /** TODO: modify for production */,
+                        'Received By'
+                    ),
                 },
             },
             'State',
-        ];
-
-        const data = [
-            ['12/3/2020', 'Gabby George', 'Samsung Note 8', 'Ben Franklin', 'Repaired'],
-            ['30/3/2020', 'Aiden Lloyd', 'Iphone 7', 'Mark Holt', 'Repaired'],
-            ['1/4/2020', 'Jaden Collins', 'Iphone 6 Plus', 'Bill Nyle', 'To be Repaired'],
-            ['4/4/2020', 'Franky Rees', 'LG V20', 'Mike Stewart', 'To be Repaired'],
-            ['23/3/2020', 'Aaren Rose', 'Samsung Note 10', 'Toledo Johnson', 'Assessed'],
-            ['3/4/2020', 'Blake Duncan', 'Nokia 3.1', 'Santa Diego', 'To be Assessed'],
-            ['12/3/2020', 'Gabby George', 'Samsung Note 8', 'Ben Franklin', 'Repaired'],
-            ['30/3/2020', 'Aiden Lloyd', 'Iphone 7', 'Mark Holt', 'Repaired'],
-            ['1/4/2020', 'Jaden Collins', 'Iphone 6 Plus', 'Bill Nyle', 'To be Repaired'],
-            ['4/4/2020', 'Franky Rees', 'LG V20', 'Mike Stewart', 'To be Repaired'],
-            ['23/3/2020', 'Aaren Rose', 'Samsung Note 10', 'Toledo Johnson', 'Assessed'],
-            ['3/4/2020', 'Blake Duncan', 'Nokia 3.1', 'Santa Diego', 'To be Assessed'],
         ];
 
         const options = {
