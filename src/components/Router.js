@@ -6,6 +6,7 @@ import Login from './Login';
 import Header from './Header';
 import NoWatch from './NoWatch';
 import fire from '../config/Fire';
+import App from '../components/App';
 class Router extends React.Component {
     state = {
         user: {},
@@ -40,6 +41,7 @@ class Router extends React.Component {
                     />
 
                     <Route component={Header} />
+                    <Route path="/home" component={App}/>
                     {/* <Route path="/dashboard" component={Dashboard}/> */}
 
                     {/*<Route component={NoWatch} />*/}

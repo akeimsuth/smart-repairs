@@ -1,7 +1,7 @@
 import React from 'react';
 import fire from '../config/Fire';
 import Alert from 'react-bootstrap/Alert';
-
+import Table from './Table';
 class UserManagement extends React.Component {
     emailRef = React.createRef();
     passwordRef = React.createRef();
@@ -32,13 +32,8 @@ class UserManagement extends React.Component {
         return (
             <div class="container">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">User Management</h1>
-                </div>
-                <hr />
-                <Alert show={this.state.show} variant="success">
-                    <p>User added successfully</p>
-                </Alert>
-                <button
+                    {/* <h1 class="h3 mb-0 text-gray-800">User Management</h1> */}
+                    {/* <button
                     class="btn btn-primary"
                     href="#"
                     data-toggle="modal"
@@ -46,7 +41,14 @@ class UserManagement extends React.Component {
                 >
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Add User
-                </button>
+                </button> */}
+                </div>
+                
+                <Alert show={this.state.show} variant="success">
+                    <p>User added successfully</p>
+                </Alert>
+                
+                <Table name={'User'}/>
 
                 <div
                     class="modal fade"

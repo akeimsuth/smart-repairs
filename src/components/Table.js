@@ -3,9 +3,83 @@ import MUIDataTable from 'mui-datatables';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import { FormGroup, TextField, FormLabel } from '@material-ui/core';
 import moment from 'moment';
-
+import axios from 'axios';
 import './Table.css';
+import Modal from "./modal"
+
 class Table extends React.Component {
+    state = {
+        record:[],
+        values:[],
+        repair:[],
+        main:[],
+        keys:[],
+        assessments:[],
+        users:[],
+        akeys:[],
+        ukeys:[],
+        unlock:[],
+        user:[]
+    }
+    client = '';
+    db = '';
+    table = '';
+    data = '';
+    num='';
+    selectData = (name) =>{
+        if(name == "Customer"){
+            return this.state.record
+        }else if(name == "User"){
+            return this.state.user
+        }
+        else if(name == "Assessment"){
+            return this.state.assessments
+        }else if(name == "Repairs"){
+            return this.state.repair
+        }else if(name == "Unlock"){
+            return this.state.unlock
+        }
+        
+    }
+    selectColumn = (name) =>{
+        if(name == "Customer"){
+            return this.state.keys
+        }else if(name == "Assessment"){
+            return this.state.akeys
+        }else if(name == "Repairs"){
+            return this.state.akeys
+        }else if(name == "Unlock"){
+            return this.state.akeys
+        }else if(name == "User"){
+            return this.state.ukeys
+        }
+    }
+    componentDidMount(){
+        this.setState({keys:["ID","First Name","Last Name","Email","Phone"]});
+        this.setState({akeys:["ID","Customer","Received By","Device","State"]});
+        this.setState({ukeys:["ID","Name","Email"]});
+        axios.get("/Customers").then(res=>{
+            this.setState({record:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Assessments").then(res=>{
+            this.setState({assessments:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Repair").then(res=>{
+            this.setState({repair:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Unlocks").then(res=>{
+            this.setState({unlock:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Users").then(res=>{
+            this.setState({user:res.data})
+            //console.log(res.data)
+        });
+    }
+
     render() {
         const columns = [
             {
@@ -100,14 +174,16 @@ class Table extends React.Component {
             ['4/4/2020', 'Franky Rees', 'LG V20', 'Mike Stewart', 'To be Repaired'],
             ['23/3/2020', 'Aaren Rose', 'Samsung Note 10', 'Toledo Johnson', 'Assessed'],
             ['3/4/2020', 'Blake Duncan', 'Nokia 3.1', 'Santa Diego', 'To be Assessed'],
+            
         ];
 
         const options = {
             filter: true,
             print: false,
-            filterType: 'multiple',
-            responsive: 'scroll',
+            filterType: 'dropdown',
+            responsive: 'stacked',
             selectableRows: 'none',
+            rowsPerPage: 10,
             downloadOptions: {
                 filename: 'customer-list.csv',
                 // separator: ';',
@@ -117,15 +193,20 @@ class Table extends React.Component {
                 },
             },
         };
+       
         return (
             <div className="container-fluid">
                 <div className="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 className="h3 mb-0 text-gray-800">{this.props.name}</h1>
+                  {this.props.name == "Assessment" || this.props.name == "User" ? <a class="btn btn-primary" data-toggle="modal"
+                    data-target={"#"+this.props.name+"Modal"}><span style={{color:"white"}}>Add new {this.props.name}</span></a>
+                  :""}<Modal/>
                 </div>
+                
                 <MUIDataTable
                     title={this.props.name + ' List'}
-                    data={data}
-                    columns={columns}
+                    data={this.selectData(this.props.name)}
+                    columns={this.selectColumn(this.props.name)}
                     options={options}
                 />
             </div>
