@@ -10,8 +10,8 @@ class Settings extends React.Component {
                 </div>
                 <ul class="list-group">
                     <li class="list-group-item">Device Model Management</li>
-                    <li class="list-group-item">Inventory Item Management</li>
-                    <li class="list-group-item">Repair Charges Management</li>
+                    <Link to="/part"><li class="list-group-item">Inventory Item Management</li></Link>
+                    <Link to="/charge"><li class="list-group-item">Repair Charges Management</li></Link>
                     <li class="list-group-item">Warranty Device Management</li>
                   <Link to="/user">
                       <li class="list-group-item">User Management</li></Link>

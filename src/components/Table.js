@@ -7,20 +7,14 @@ import moment from 'moment';
 import axios from 'axios';
 import './Table.css';
 import Modal from "./modal"
+import RingLoader from "react-spinners/RingLoader";
 
 class Table extends React.Component {
     state = {
-        record:[],
-        values:[],
-        repair:[],
-        main:[],
         keys:[],
-        assessments:[],
-        users:[],
         akeys:[],
         ukeys:[],
-        unlock:[],
-        user:[]
+     
     }
     client = '';
     db = '';
@@ -29,16 +23,21 @@ class Table extends React.Component {
     num='';
     selectData = (name) =>{
         if(name == "Customer"){
-            return this.state.record
+            return this.props.customer
         }else if(name == "User"){
-            return this.state.user
+            return this.props.user
         }
         else if(name == "Assessment"){
-            return this.state.assessments
+            return this.props.assessment
         }else if(name == "Repairs"){
-            return this.state.repair
+            return this.props.repair
         }else if(name == "Unlock"){
-            return this.state.unlock
+            return this.props.unlock
+        }else if(name == "Charge"){
+            return this.props.charge
+        }
+        else if(name == "Part"){
+            return this.props.part
         }
         
     }
@@ -53,32 +52,18 @@ class Table extends React.Component {
             return this.state.akeys
         }else if(name == "User"){
             return this.state.ukeys
+        }else if(name == "Charge"){
+            return ["Charge","Technician Commission","Charge to Customer"]
+        }else if(name == "Part"){
+            return ["ID","Part Name","Current Amount","Roerder Amount"]
         }
     }
     componentDidMount(){
         this.setState({keys:["ID","First Name","Last Name","Email","Phone"]});
         this.setState({akeys:["ID","Customer","Received By","Device","State"]});
         this.setState({ukeys:["ID","Name","Email"]});
-        axios.get("/Customers").then(res=>{
-            this.setState({record:res.data})
-            //console.log(res.data)
-        });
-        axios.get("/Assessments").then(res=>{
-            this.setState({assessments:res.data})
-            //console.log(res.data)
-        });
-        axios.get("/Repair").then(res=>{
-            this.setState({repair:res.data})
-            //console.log(res.data)
-        });
-        axios.get("/Unlocks").then(res=>{
-            this.setState({unlock:res.data})
-            //console.log(res.data)
-        });
-        axios.get("/Users").then(res=>{
-            this.setState({user:res.data})
-            //console.log(res.data)
-        });
+    
+        
     }
 
     render() {
@@ -129,7 +114,7 @@ class Table extends React.Component {
         });
         const columns = [
             {
-                name: 'Date',
+                name: 'ID',
                 options: {
                     filter: true,
                     filterType: 'custom',
@@ -184,39 +169,39 @@ class Table extends React.Component {
                 },
             },
             {
-                name: 'Customer',
+                name: this.props.name == "Customer" ? "First Name":"Customer",
                 options: {
                     filter: true,
                     filterType: 'custom',
                     filterOptions: customFilter(
-                        data.map((r) => r[1]) /** TODO: modify for production */,
-                        'Customer'
+                        this.selectData(this.props.name).map((r) => r[1]) /** TODO: modify for production */,
+                        this.props.name == "Customer" ? "First Name":"Customer"
                     ),
                 },
             },
             {
-                name: 'Device',
+                name: this.props.name == "Customer" ? "Last Name":"Received By",
                 options: {
                     filter: true,
                     filterType: 'custom',
                     filterOptions: customFilter(
-                        data.map((r) => r[2]) /** TODO: modify for production */,
-                        'Device'
+                        this.selectData(this.props.name).map((r) => r[2]) /** TODO: modify for production */,
+                        this.props.name == "Customer" ? "Last Name":"Received By"
                     ),
                 },
             },
             {
-                name: 'Received By',
+                name: this.props.name == "Customer" ? "Email":"Device",
                 options: {
                     filter: true,
                     filterType: 'custom',
                     filterOptions: customFilter(
-                        data.map((r) => r[3]) /** TODO: modify for production */,
-                        'Received By'
+                        this.selectData(this.props.name).map((r) => r[3]) /** TODO: modify for production */,
+                        this.props.name == "Customer" ? "Email":"Device"
                     ),
                 },
             },
-            'State',
+            this.props.name == "Customer" ? "Phone":"State",
         ];
 
 
@@ -241,17 +226,23 @@ class Table extends React.Component {
             <div className="container-fluid">
                 <div className="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 className="h3 mb-0 text-gray-800">{this.props.name}</h1>
-                  {this.props.name == "Assessment" || this.props.name == "User" ? <a class="btn btn-primary" data-toggle="modal"
+                  {this.props.name == "Assessment" || this.props.name == "User" || this.props.name == "Charge" ? <a class="btn btn-primary" data-toggle="modal"
                     data-target={"#"+this.props.name+"Modal"}><span style={{color:"white"}}>Add new {this.props.name}</span></a>
-                  :""}<Modal/>
+                  :""}<Modal value={this.props.user}/>
                 </div>
-                
+                {this.selectData(this.props.name) == 0 ?
+                  <div style={{marginLeft:'400px',MarginTop:'400px'}}>  <RingLoader
+                        size={100}
+                        color={"#123abc"}
+                    /><span style={{marginLeft:'20px'}}>Loading...</span></div>
+                    :
                 <MUIDataTable
                     title={this.props.name + ' List'}
                     data={this.selectData(this.props.name)}
                     columns={this.selectColumn(this.props.name)}
                     options={options}
                 />
+            }
             </div>
         );
     }

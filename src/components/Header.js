@@ -16,8 +16,58 @@ import Settings from './Settings';
 import UserManagement from './UserManagement';
 import fire from '../config/Fire';
 import './Header.css';
+import axios from 'axios';
 
-function Header() {
+class Header extends React.Component {
+    state = {
+        record:[],
+        values:[],
+        repair:[],
+        main:[],
+        keys:[],
+        assessments:[],
+        users:[],
+        akeys:[],
+        ukeys:[],
+        unlock:[],
+        user:[],
+        charges:[],
+        parts:[]
+    }
+    componentDidMount(){
+        
+        axios.get("/Users").then(res=>{
+            this.setState({user:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Customers").then(res=>{
+            this.setState({record:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Assessments").then(res=>{
+            this.setState({assessments:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Repair").then(res=>{
+            this.setState({repair:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Unlocks").then(res=>{
+            this.setState({unlock:res.data})
+            //console.log(res.data)
+        });
+    
+        axios.get("/Charges").then(res=>{
+            this.setState({charges:res.data})
+            //console.log(res.data)
+        });
+        axios.get("/Parts").then(res=>{
+            
+            this.setState({parts:res.data})
+            //console.log(res.data)
+        });
+    }
+    render(){
     const year = new Date();
     const logout = () => {
         fire.auth().signOut();
@@ -28,7 +78,7 @@ function Header() {
      */
     const MenuLink = ({ to, className, onClick, icon, title }) => {
         return (
-            <li className={`nav-item`}>
+            <li className={`nav-item`} style={{marginBottom:'-5px'}}>
                 <NavLink className="nav-link links" activeClassName="active-link" to={to}>
                     <i className={icon}></i>
                     <span className="styled-span">{title}</span>
@@ -50,7 +100,7 @@ function Header() {
                         style={{ backgroundColor: '3b688a' }}
                         className="sidebar-brand d-flex align-items-center justify-content-center"
                     >
-                        <img src="../logosm.png" alt="" width="200" heighth="200" />
+                        <img src="../logosm.png" alt="" width="150" heighth="150" />
                     </Link>
                     <hr className="sidebar-divider my-0" />
                     <MenuLink
@@ -59,7 +109,6 @@ function Header() {
                         title="Dashboard"
                     />
                     <hr className="sidebar-divider" />
-                    <div className="sidebar-heading">Options</div>
                     <MenuLink
                         to={'/assessment'}
                         icon="fas fa-server"
@@ -73,7 +122,7 @@ function Header() {
                         icon="fas fa-fw fa-user"
                         title="Customer"
                     />
-                    <hr className="sidebar-divider" />
+                    <hr style={{marginTop:'15px'}}className="sidebar-divider" />
                 </ul>
 
                 <div id="content-wrapper" className="d-flex flex-column">
@@ -156,10 +205,13 @@ function Header() {
                                         aria-haspopup="true"
                                         aria-expanded="false"
                                     >
-                                        <span className="mr-2 d-none d-lg-inline text-gray-600 small">
-                                            Administrator
-                                        </span>
-                                        <i className="far fa-user"></i>
+                                        <i style={{marginRight:'5px'}}className="far fa-user">   </i>
+                                        <span className="mr-2 d-none d-lg-inline text-gray-600">
+                                             Administrator
+                                        </span> 
+                                         <i style={{marginTop:'5px'}}class="fas fa-chevron-down"></i>
+                                          
+                                        
                                     </a>
 
                                     <div
@@ -197,19 +249,19 @@ function Header() {
                             <Route
                                 path="/customer"
                                 render={() => {
-                                    return <Table name={'Customer'} />;
+                                    return <Table name={'Customer'} customer={this.state.record} />;
                                 }}
                             />
                             <Route
                                 path="/assessment"
                                 render={() => {
-                                    return <Table name={'Assessment'} />;
+                                    return <Table name={'Assessment'} assessment={this.state.assessments} />;
                                 }}
                             />
                             <Route
                                 path="/repair"
                                 render={() => {
-                                    return <Table name={'Repairs'} />;
+                                    return <Table name={'Repairs'} repair={this.state.repair}/>;
                                 }}
                             />
                             <Route
@@ -221,7 +273,7 @@ function Header() {
                             <Route
                                 path="/unlock"
                                 render={() => {
-                                    return <Table name={'Unlock'} />;
+                                    return <Table name={'Unlock'} unlock={this.state.unlock}/>;
                                 }}
                             />
                             <Route
@@ -238,12 +290,18 @@ function Header() {
                             />
                             <Route path="/profile" render={() => <Profile />} />
                             <Route path="/settings" render={() => <Settings />} />
-                            <Route path="/user" render={() => <UserManagement />} />
+                            <Route path="/user" render={() => <Table name={'User'} user={this.state.user} />} />
+                            <Route path="/charge"  render={() => {
+                                    return <Table name={'Charge'} charge={this.state.charges}/>;
+                                }} />
+                                <Route path="/part"  render={() => {
+                                    return <Table name={'Part'} part={this.state.parts}/>;
+                                }} />
                             <Route render={() => <Redirect to="/dashboard" />} />
                         </Switch>
                     </div>
 
-                    <footer className="sticky-footer bg-white">
+                    <footer style={{marginTop:'20px'}}className="sticky-footer bg-white">
                         <div className="container my-auto">
                             <div className="copyright text-center my-auto">
                                 <span>
@@ -303,6 +361,7 @@ function Header() {
             </div>
         </Router>
     );
+  }
 }
 
 export default Header;

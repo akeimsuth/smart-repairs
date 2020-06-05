@@ -1,6 +1,23 @@
 import React from 'react';
 import PersonIcon from '@material-ui/icons/Person';
+import { Bar,Line } from 'react-chartjs-2';
 class Dashboard extends React.Component {
+
+    data = {
+        labels:['Jan','Feb','Mar','Apr','May','Jun'],
+        datasets:[{
+            label:'# of Votes',
+            data: [12,19,3,2,5,2],
+            backgroundColor: [
+                'rgba(215, 99, 32, 0.2)',
+                'rgba(54, 182, 25, 6.2)',
+                'rgba(225, 206, 8, 0.2)',
+                'rgba(175, 182, 12, 8.2)',
+                'rgba(113, 12, 125, 0.2)',
+                'rgba(125, 129, 64, 0.2)'
+            ]
+        }]
+    }
     render() {
         return (
             <div className="container-fluid">
@@ -148,10 +165,12 @@ class Dashboard extends React.Component {
                             </div>
 
                             <div className="card-body">
-                                <p>Line Chart</p>
-                                <div className="chart-area">
-                                    <canvas id="myAreaChart"></canvas>
-                                </div>
+                              <Line
+                                 data={this.data}
+                                 width={10}
+                                 height={5}
+                                 options={{ maintainAspectRatio: true }}
+                              />
                             </div>
                         </div>
                     </div>
@@ -196,12 +215,14 @@ class Dashboard extends React.Component {
                             </div>
 
                             <div className="card-body">
-                                <p>Bar Graph</p>
-                                <div className="chart-pie pt-4 pb-2">
-                                    <canvas id="myPieChart"></canvas>
-                                </div>
+                                <Bar
+                                data={this.data}
+                                width={10}
+                                height={11}
+                                options={{ maintainAspectRatio: true }}
+                                />
 
-                                <div className="mt-4 text-center small">
+                                {/* <div className="mt-4 text-center small">
                                     <span className="mr-2">
                                         <i className="fas fa-circle text-primary"></i>{' '}
                                         Direct
@@ -214,7 +235,7 @@ class Dashboard extends React.Component {
                                         <i className="fas fa-circle text-info"></i>{' '}
                                         Referral
                                     </span>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>
