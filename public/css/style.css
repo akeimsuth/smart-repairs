@@ -1,0 +1,15 @@
+.links{
+    color: white;
+    text-decoration: none;
+}
+.mtitle{
+    color: #2e91b3;
+    font-weight: bold;
+}
+.ititle{
+    width: 90px;
+    height:1px;
+    background-color: #2e91b3;
+    position: absolute;
+    margin-top: 16px;
+}
