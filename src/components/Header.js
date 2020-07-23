@@ -116,7 +116,7 @@ class Header extends React.Component {
                     />
                     <MenuLink to={'/Repair'} icon="fas fa-fw fa-wrench" title="Repair" />
                     <MenuLink to={'/unlock'} icon="fas fa-unlock" title="Unlocks" />
-                    <MenuLink to={'/inventory'} icon="fas fa-barcode" title="Inventory" />
+                    {/* <MenuLink to={'/inventory'} icon="fas fa-barcode" title="Inventory" /> */}
                     <MenuLink
                         to={'/customer'}
                         icon="fas fa-fw fa-user"
