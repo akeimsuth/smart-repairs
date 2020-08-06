@@ -36,32 +36,32 @@ class Header extends React.Component {
     }
     componentDidMount(){
         
-        axios.get("/Users").then(res=>{
+        axios.get("/users").then(res=>{
             this.setState({user:res.data})
             //console.log(res.data)
         });
-        axios.get("/Customers").then(res=>{
+        axios.get("/customers").then(res=>{
             this.setState({record:res.data})
             //console.log(res.data)
         });
-        axios.get("/Assessments").then(res=>{
+        axios.get("/assessments").then(res=>{
             this.setState({assessments:res.data})
             //console.log(res.data)
         });
-        axios.get("/Repair").then(res=>{
+        axios.get("/repair").then(res=>{
             this.setState({repair:res.data})
             //console.log(res.data)
         });
-        axios.get("/Unlocks").then(res=>{
+        axios.get("/unlocks").then(res=>{
             this.setState({unlock:res.data})
             //console.log(res.data)
         });
     
-        axios.get("/Charges").then(res=>{
+        axios.get("/charges").then(res=>{
             this.setState({charges:res.data})
             //console.log(res.data)
         });
-        axios.get("/Parts").then(res=>{
+        axios.get("/parts").then(res=>{
             
             this.setState({parts:res.data})
             //console.log(res.data)
@@ -110,15 +110,15 @@ class Header extends React.Component {
                     />
                     <hr className="sidebar-divider" />
                     <MenuLink
-                        to={'/assessment'}
+                        to={'/assessments'}
                         icon="fas fa-server"
                         title="Assessments"
                     />
-                    <MenuLink to={'/Repair'} icon="fas fa-fw fa-wrench" title="Repair" />
-                    <MenuLink to={'/unlock'} icon="fas fa-unlock" title="Unlocks" />
+                    <MenuLink to={'/repair'} icon="fas fa-fw fa-wrench" title="Repair" />
+                    <MenuLink to={'/unlocks'} icon="fas fa-unlock" title="Unlocks" />
                     {/* <MenuLink to={'/inventory'} icon="fas fa-barcode" title="Inventory" /> */}
                     <MenuLink
-                        to={'/customer'}
+                        to={'/customers'}
                         icon="fas fa-fw fa-user"
                         title="Customer"
                     />
@@ -247,13 +247,13 @@ class Header extends React.Component {
 
                         <Switch>
                             <Route
-                                path="/customer"
+                                path="/customers"
                                 render={() => {
                                     return <Table name={'Customer'} customer={this.state.record} />;
                                 }}
                             />
                             <Route
-                                path="/assessment"
+                                path="/assessments"
                                 render={() => {
                                     return <Table name={'Assessment'} assessment={this.state.assessments} />;
                                 }}
@@ -271,7 +271,7 @@ class Header extends React.Component {
                                 }}
                             />
                             <Route
-                                path="/unlock"
+                                path="/unlocks"
                                 render={() => {
                                     return <Table name={'Unlock'} unlock={this.state.unlock}/>;
                                 }}
@@ -290,11 +290,11 @@ class Header extends React.Component {
                             />
                             <Route path="/profile" render={() => <Profile />} />
                             <Route path="/settings" render={() => <Settings />} />
-                            <Route path="/user" render={() => <Table name={'User'} user={this.state.user} />} />
-                            <Route path="/charge"  render={() => {
+                            <Route path="/users" render={() => <Table name={'User'} user={this.state.user} />} />
+                            <Route path="/charges"  render={() => {
                                     return <Table name={'Charge'} charge={this.state.charges}/>;
                                 }} />
-                                <Route path="/part"  render={() => {
+                                <Route path="/parts"  render={() => {
                                     return <Table name={'Part'} part={this.state.parts}/>;
                                 }} />
                             <Route render={() => <Redirect to="/dashboard" />} />

@@ -2,7 +2,7 @@
   "name": "smart",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://repairs-server.herokuapp.com",
+  "proxy": "https://repairs-server.herokuapp.com:8080",
   "dependencies": {
     "@material-ui/core": "^4.9.9",
     "@material-ui/icons": "^4.9.1",
@@ -19,6 +19,7 @@
     "mongodb-stitch-browser-sdk": "^4.8.0",
     "mui-datatables": "^2.14.0",
     "react": "^16.13.1",
+    "react-amazing-proxy": "^1.0.63",
     "react-bootstrap": "^1.0.0",
     "react-chartjs-2": "^2.9.0",
     "react-dom": "^16.13.1",
@@ -29,10 +30,11 @@
     "react-spinners": "^0.8.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start": "npm run build && (cd server && npm start)"
   },
   "eslintConfig": {
     "extends": "react-app"
